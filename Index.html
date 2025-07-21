@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نتيجة اولى تاريخ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #e0f2ff, #ffffff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .result-box {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 400px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #004999;
+    }
+    table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+    th {
+      background: #e6f2ff;
+    }
+    .summary {
+      margin-top: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      background: #f0f8ff;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #b3daff;
+    }
+  </style>
+</head>
+<body>
+  <div class="result-box">
+    <h2>النتيجة</h2>
+    <input type="text" placeholder="ادخلي رقم الجلوس" id="seatNumber">
+    <button onclick="showResult()">اعرض النتيجة</button>
+    <div id="resultArea"></div>
+  </div>
+
+  <script>
+    // الدرجات الموحدة
+    const grades = {
+      "القرآن الكريم": "جيد",
+      "مصر البيزنطية": "جيد جدا",
+      "الفقه الإسلامي": "جيد جدا",
+      "تاريخ مصر في عصري البطالمة والرومان": "جيد جدا",
+      "العقيد والأخلاق": "أمتياز",
+      "الجغرافيا": "جيد جدا",
+      "اللغة العربية": "أمتياز",
+      "الخلفاء الراشدين": "جيد جدا"
+    };
+
+    const students = [
+      {
+        seat: "4051058",
+        name: "تيسير مصطفى صبري عبد الحميد",
+        grades: grades
+      },
+      {
+        seat: "4051066",
+        name: "حبيبه حماده فتحي سليم",
+        grades: grades
+      }
+    ];
+
+    // تحويل التقدير إلى نقاط
+    function getPoints(grade){
+      switch(grade){
+        case "أمتياز": return 4;
+        case "جيد جدا": return 3;
+        case "جيد": return 2;
+        case "مقبول": return 1;
+        default: return 0;
+      }
+    }
+
+    function showResult() {
+      let seat = document.getElementById('seatNumber').value.trim();
+      let area = document.getElementById('resultArea');
+      area.innerHTML = "";
+
+      if (seat === "") {
+        area.innerHTML = "<p style='color:red'>من فضلك ادخلي رقم الجلوس</p>";
+        return;
+      }
+
+      let student = students.find(s => s.seat === seat);
+
+      if (student) {
+        // حساب المعدل
+        let totalPoints = 0;
+        let subjectsCount = 0;
+        for (let subject in student.grades) {
+          totalPoints += getPoints(student.grades[subject]);
+          subjectsCount++;
+        }
+        let gpa = (totalPoints / subjectsCount).toFixed(2); // تقريب لرقمين عشريين
+        let overall = "جيد جدا"; // حسب الحسابات اللي عملناها
+
+        let tableHTML = `
+          <h3>الاسم: ${student.name}</h3>
+          <h4>رقم الجلوس: ${student.seat}</h4>
+          <table>
+            <tr><th>المادة</th><th>التقدير</th></tr>
+        `;
+
+        for (let subject in student.grades) {
+          tableHTML += `<tr><td>${subject}</td><td>${student.grades[subject]}</td></tr>`;
+        }
+
+        tableHTML += `</table>
+          <div class="summary">
+            <p>التقدير العام: ${overall}</p>
+            <p>GPA: ${gpa}</p>
+          </div>
+        `;
+        area.innerHTML = tableHTML;
+      } else {
+        area.innerHTML = "<p style='color:red'>لم يتم العثور على هذا الرقم!</p>";
+      }
+    }
+  </script>
+</body>
+</html
