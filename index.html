@@ -1,162 +1,139 @@
-<!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title></title>نتيجة اولى تاريخ الفصل الدراسي الثاني </title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #e0f2ff, #ffffff);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .result-box {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 400px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #0066cc;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #004999;
-    }
-    table {
-      margin-top: 20px;
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      font-size: 14px;
-      text-align: center;
-    }
-    th {
-      background: #e6f2ff;
-    }
-    .summary {
-      margin-top: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      background: #f0f8ff;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #b3daff;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نتيجة الطالبات</title>
+<style>
+  body {
+    background: linear-gradient(to bottom right, #ffffff, #cce6ff);
+    font-family: Arial, sans-serif;
+    text-align: center;
+    direction: rtl;
+  }
+  h1 {
+    color: #003366;
+    margin-top: 20px;
+  }
+  .input-container {
+    margin-top: 40px;
+  }
+  input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    width: 250px;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3399ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  table {
+    margin: 30px auto;
+    border-collapse: collapse;
+    width: 90%;
+    background-color: #fff;
+    display: none;
+  }
+  th, td {
+    border: 1px solid #99ccff;
+    padding: 10px;
+  }
+  th {
+    background-color: #cce6ff;
+    color: #003366;
+  }
+  .result-info {
+    display: none;
+    margin-top: 20px;
+  }
+</style>
 </head>
 <body>
-  <div class="result-box">
-    <h2>النتيجة</h2>
-    <input type="text" placeholder="ادخلي رقم الجلوس" id="seatNumber">
-    <button onclick="showResult()">اعرض النتيجة</button>
-    <div id="resultArea"></div>
-  </div>
 
-  <script>
-    // الدرجات الموحدة
-    const grades = {
-      "القرآن الكريم": "جيد",
-      "مصر البيزنطية": "جيد جدا",
-      "الفقه الإسلامي": "جيد جدا",
-      "تاريخ مصر في عصري البطالمة والرومان": "جيد جدا",
-      "العقيد والأخلاق": "أمتياز",
-      "الجغرافيا": "جيد جدا",
-      "اللغة العربية": "أمتياز",
-      "الخلفاء الراشدين": "جيد جدا"
-    };
+<h1>البحث عن نتيجة الطالبة</h1>
 
-    const students = [
-      {
-        seat: "4051058",
-        name: "تيسير مصطفى صبري عبد الحميد",
-        grades: grades
-      },
-      {
-        seat: "4051066",
-        name: "حبيبه حماده فتحي سليم",
-        grades: grades
-      }
-    ];
+<div class="input-container">
+  <input type="text" id="seatNumber" placeholder="ادخلي رقم الجلوس">
+  <button onclick="showResult()">عرض النتيجة</button>
+</div>
 
-    // تحويل التقدير إلى نقاط
-    function getPoints(grade){
-      switch(grade){
-        case "أمتياز": return 4;
-        case "جيد جدا": return 3;
-        case "جيد": return 2;
-        case "مقبول": return 1;
-        default: return 0;
-      }
+<div class="result-info" id="resultInfo">
+  <h2 id="studentName"></h2>
+  <h3>التقدير العام: جيد جدا</h3>
+  <h3>GPA: 3.6</h3>
+</div>
+
+<table id="resultTable">
+  <thead>
+    <tr>
+      <th>المادة</th>
+      <th>التقدير</th>
+    </tr>
+  </thead>
+  <tbody id="tableBody">
+    <!-- هيتملّى بالدرجات تلقائي -->
+  </tbody>
+</table>
+
+<script>
+  const students = {
+    "4051058": "تيسير مصطفى صبري عبد الحميد",
+    "4051066": "حبيبة حمادة فتحي سليم",
+    "4051130": "سجود موسى هليل محمد"
+  };
+
+  const grades = [
+    ["القرآن الكريم", "جيد"],
+    ["مصر البيزنطية", "جيد جدا"],
+    ["الفقه الإسلامي", "جيد جدا"],
+    ["تاريخ مصر في عصري البطالمة والرومان", "جيد جدا"],
+    ["العقيدة والأخلاق", "امتياز"],
+    ["الجغرافيا", "جيد جدا"],
+    ["اللغة العربية", "امتياز"],
+    ["الخلفاء الراشدين", "جيد جدا"]
+  ];
+
+  function showResult() {
+    const seat = document.getElementById("seatNumber").value.trim();
+    const name = students[seat];
+
+    const table = document.getElementById("resultTable");
+    const info = document.getElementById("resultInfo");
+    const tableBody = document.getElementById("tableBody");
+    const studentName = document.getElementById("studentName");
+
+    tableBody.innerHTML = "";
+
+    if (name) {
+      studentName.innerText = "الاسم: " + name;
+
+      grades.forEach(subject => {
+        const row = document.createElement("tr");
+        const subjectCell = document.createElement("td");
+        const gradeCell = document.createElement("td");
+
+        subjectCell.innerText = subject[0];
+        gradeCell.innerText = subject[1];
+
+        row.appendChild(subjectCell);
+        row.appendChild(gradeCell);
+        tableBody.appendChild(row);
+      });
+
+      info.style.display = "block";
+      table.style.display = "table";
+    } else {
+      alert("رقم الجلوس غير موجود.");
+      info.style.display = "none";
+      table.style.display = "none";
     }
+  }
+</script>
 
-    function showResult() {
-      let seat = document.getElementById('seatNumber').value.trim();
-      let area = document.getElementById('resultArea');
-      area.innerHTML = "";
-
-      if (seat === "") {
-        area.innerHTML = "<p style='color:red'>من فضلك ادخلي رقم الجلوس</p>";
-        return;
-      }
-
-      let student = students.find(s => s.seat === seat);
-
-      if (student) {
-        // حساب المعدل
-        let totalPoints = 0;
-        let subjectsCount = 0;
-        for (let subject in student.grades) {
-          totalPoints += getPoints(student.grades[subject]);
-          subjectsCount++;
-        }
-        let gpa = (totalPoints / subjectsCount).toFixed(2); // تقريب لرقمين عشريين
-        let overall = "جيد جدا"; // حسب الحسابات اللي عملناها
-
-        let tableHTML = `
-          <h3>الاسم: ${student.name}</h3>
-          <h4>رقم الجلوس: ${student.seat}</h4>
-          <table>
-            <tr><th>المادة</th><th>التقدير</th></tr>
-        `;
-
-        for (let subject in student.grades) {
-          tableHTML += `<tr><td>${subject}</td><td>${student.grades[subject]}</td></tr>`;
-        }
-
-        tableHTML += `</table>
-          <div class="summary">
-            <p>التقدير العام: ${overall}</p>
-            <p>GPA: ${gpa}</p>
-          </div>
-        `;
-        area.innerHTML = tableHTML;
-      } else {
-        area.innerHTML = "<p style='color:red'>لم يتم العثور على هذا الرقم!</p>";
-      }
-    }
-  </script>
 </body>
 </html
